@@ -65,7 +65,7 @@ class KuhnPoker:
         p2 = self.p2_card
         
         # Pot calculation
-        # Ante is 1 each (Total 2)
+        # Ante is 1 each (Total 2) mise obligatoire small blind
         # Bet adds 1.
         
         if result == 'fold':
@@ -77,9 +77,9 @@ class KuhnPoker:
             
         if result == 'showdown':
             pot = 2 # Antes
-            if 'b' in h: pot = 4 # If there were bets/calls
+            if 'b' in h: pot = 4 # If there were bets/calls 
             
-            winner = 1 if p1 > p2 else -1
+            winner = 1 if p1 > p2 else -1 
             return (pot / 2) * winner
             
         return 0
@@ -105,6 +105,7 @@ if __name__ == "__main__":
         print(f"Your Card: {game.card_str[state['p1_card']]}")
         
         while not done:
+            game.render()
             current_player = state['turn']
             
             # Simple UI logic
@@ -120,6 +121,7 @@ if __name__ == "__main__":
             if action not in ['p', 'b']: continue
             
             state, reward, done = game.step(action)
+            
             
         # End of hand
         print(f"\nHand Over! History: {state['history']}")
