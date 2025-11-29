@@ -1,6 +1,6 @@
 import numpy as np
 import random
-
+import json
 class Node:
     def __init__(self, num_actions=2):
         self.info_set = ""
@@ -19,6 +19,7 @@ class Node:
         Calcule la stratégie courante en utilisant le Regret Matching.
         Si j'ai beaucoup de regret positif sur une action, je vais augmenter sa probabilité.
         """
+
         # On ne garde que les regrets positifs (si regret < 0, on s'en fiche)
         strategy = np.maximum(0, self.regret_sum)
         normalizing_sum = np.sum(strategy)
@@ -58,6 +59,16 @@ class KuhnCFRTrainer:
             self.node_map[info_set].info_set = info_set
         return self.node_map[info_set]
     
+    def save_strategy(self, filename="strategy.json"):
+        """Sauvegarde la stratégie finale dans un fichier JSON"""
+        final_strategy = {}
+        for info_set, node in self.node_map.items():
+            # On convertit le numpy array en liste pour que JSON comprenne
+            final_strategy[info_set] = node.get_average_strategy().tolist()
+            
+        with open(filename, 'w') as f:
+            json.dump(final_strategy, f, indent=4)
+        print(f"Stratégie sauvegardée dans '{filename}'")
 
     def cfr(self, cards, history, p0, p1):
         """
@@ -88,7 +99,7 @@ class KuhnCFRTrainer:
             elif history == "pbp" or history == "bp":
                 is_terminal = True
                 payoff = 1 # Le joueur actuel gagne car l'autre s'est couché avant
-            
+                            
             if is_terminal:
                 return payoff
 
@@ -170,3 +181,4 @@ if __name__ == "__main__":
     # 50 000 itérations suffisent largement pour le Kuhn Poker
     trainer.train(50000)
     trainer.print_results()
+    trainer.save_strategy() 
