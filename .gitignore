@@ -1,16 +1,13 @@
 # Mac OS
 .DS_Store
 
-# Python
 __pycache__/
 *.py[cod]
 *$py.class
 
-# Environnements virtuels (on ne versionne jamais les bibliothèques installées)
 venv/
 env/
 .env
 
-# IDEs (si tu utilises VS Code ou PyCharm)
 .vscode/
 .idea/
